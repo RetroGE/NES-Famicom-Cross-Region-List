@@ -1,0 +1,2 @@
+Game ID,NES Title,Famicom Title,Developer,Famicom Cart Code (HVC),Famicom Disk Code (FMC/FDS),JP Mapper,NA Mapper,JP PRG Size KB,NA PRG Size KB,JP Save Method,NA Save Method,Confidence,Notes
+GID-DEMO001,Super Mario Bros,スーパーマリオブラザーズ,Nintendo,HVC-SM,,NROM,NROM,32,32,None,None,High,Demo row
