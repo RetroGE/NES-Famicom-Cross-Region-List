@@ -1,183 +1,236 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>NES ↔ Famicom — Cross-Region List (High-confidence WIP)</title>
-  <link rel="icon" href="assets/favicon.svg">
-  <style>
-:root{ --bg:#0b0f14; --card:#11161d; --muted:#4b5563; --text:#e5e7eb; --accent:#22d3ee; --accent2:#a78bfa; }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NES ↔ Famicom — Cross‑Region List</title>
+<meta name="description" content="Cross‑region pairings between NES (US) and Famicom (JP), with dev/publisher, HVC/FDS codes, mappers, and notes."/>
+<style>
+:root{--bg:#0b0f14;--panel:#0f141b;--ink:#e5e7eb;--muted:#a3a3a3;--line:#1f2937;--accent:#60a5fa}
+:root.light{--bg:#f7fafc;--panel:#ffffff;--ink:#0b1020;--muted:#536277;--line:#d9e0ea;--accent:#2563eb}
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial,sans-serif}
 a{color:var(--accent)}
-header{padding:24px 16px 8px;max-width:1200px;margin:0 auto}
-h1{font-size:clamp(22px,3vw,32px);margin:0 0 6px}
-.sub{color:var(--muted);font-size:14px}
-.container{max-width:1200px;margin:12px auto 32px;padding:0 16px}
-.controls{display:grid;grid-template-columns:1fr 160px 160px;gap:12px;margin:12px 0 8px}
-input,select{background:#0e141b;border:1px solid #1f2937;color:var(--text);padding:10px 12px;border-radius:10px;outline:none}
-.table-wrap{background:var(--card);border:1px solid #1f2937;border-radius:14px;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+header{padding:20px 16px;max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+h1{margin:0;font-size:22px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+.container{max-width:1280px;margin:0 auto;padding:0 16px 32px}
+.controls{display:grid;grid-template-columns:1fr 140px 140px 140px 160px;gap:8px;margin:12px 0}
+input,select,button{background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:10px;outline:none}
+button.toggle{cursor:pointer}
+.badge{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:12px;margin-left:8px;color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0}
+.cols{display:flex;flex-wrap:wrap;gap:10px}
+.cols label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:13px;cursor:pointer}
+.table-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:14px;min-width:1200px}
-th,td{padding:10px 12px;border-bottom:1px solid #1f2937;vertical-align:top}
-th{position:sticky;top:0;background:#0f141b;border-bottom:1px solid #293648;text-align:left;font-weight:600;cursor:pointer}
-tr:hover td{background:rgba(255,255,255,.02)}
-.badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid #334155;color:#cbd5e1;font-size:12px}
-.badge.high{border-color:#15803d;color:#86efac}
-.badge.medium{border-color:#a16207;color:#facc15}
-.counts{display:flex;gap:14px;align-items:center;color:#a3a3a3;font-size:13px;margin:10px 0 16px}
-footer{border-top:1px dashed #263041;margin-top:32px;padding:12px 0;color:#94a3b8;text-align:center;font-size:12px}
-small.mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;color:#9ca3af}
-.hide{display:none}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{position:sticky;top:0;background:var(--panel);cursor:pointer;white-space:nowrap}
+td small{color:var(--muted)}
+footer{padding:18px;color:var(--muted);text-align:center}
+#help{margin-top:8px;font-size:12px;color:var(--muted)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-top:6px}
+@media (max-width: 820px){header{gap:8px}h1{font-size:18px}.controls{grid-template-columns:1fr 1fr;gap:6px}table{font-size:13px;min-width:900px}th,td{padding:6px 8px}.toolbar{justify-content:flex-start}}
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>NES ↔ Famicom — Cross-Region List</h1>
-    <div class="sub">WIP snapshot with v2 schema columns (placeholders allowed). CSV: <code>data/nes_na_high_locked_v2.csv</code>.</div>
-  </header>
-  <div class="container">
-    <div class="controls">
-      <input id="q" placeholder="Search title, dev, notes…" />
-      <select id="confidence">
-        <option value="">All confidence</option>
-        <option value="High">High only</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-      </select>
-      <select id="publisher">
-        <option value="">All publishers</option>
-      </select>
-    </div>
-
-    <div class="counts">
-      <div><span id="shown">0</span> shown</div>
-      <div>from <span id="total">0</span> rows</div>
-    </div>
-
-    <div class="table-wrap">
-      <table id="grid">
-        <thead>
-          <tr>
-            <th data-k="NES Title">NES Title</th>
-            <th data-k="Famicom Title">Famicom Title</th>
-            <th data-k="Developer">Developer</th>
-            <th data-k="Publisher NA">Publisher (NA)</th>
-            <th data-k="Publisher JP">Publisher (JP)</th>
-            <th data-k="Famicom Cart Code (HVC)">HVC</th>
-            <th data-k="Famicom Disk Code (FMC/FDS)">FMC/FDS</th>
-            <th data-k="NA Mapper">NA Mapper</th>
-            <th data-k="JP Mapper">JP Mapper</th>
-            <th data-k="NA PRG Size KB">NA PRG</th>
-            <th data-k="JP PRG Size KB">JP PRG</th>
-            <th data-k="NA Save Method">NA Save</th>
-            <th data-k="JP Save Method">JP Save</th>
-            <th data-k="Confidence">Confidence</th>
-            <th data-k="Notes">Notes</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <footer>
-      <div>CSV: <a href="data/nes_na_high_locked_v2.csv">data/nes_na_high_locked_v2.csv</a></div>
-      <div><small class="mono">Built 2025-08-12 16:44 UTC</small></div>
-    </footer>
+<header>
+  <div>
+    <h1>NES ↔ Famicom — Cross‑Region List <span class="badge">Tight v1</span></h1>
+    <div class="mono" id="build"></div>
+    <div id="help">Switch datasets with <code>?csv=&lt;filename.csv&gt;</code>. Files live in <code>/data</code>.</div>
   </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button id="theme" class="toggle" title="Toggle light/dark">🌓 Theme</button>
+    <button id="dl" class="toggle" title="Download current filtered rows as CSV">⬇️ Download filtered</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <input id="q" placeholder="Search titles, devs, publishers, notes…"/>
+    <select id="confidence"><option value="">All confidence</option><option>High</option><option>Medium</option></select>
+    <select id="pubna"><option value="">Publisher (NA)</option></select>
+    <select id="pubjp"><option value="">Publisher (JP)</option></select>
+    <select id="fb"><option value="">FamicomBox</option><option>Yes (JP Mr. Dream build)</option></select>
+  </div>
+
+  <div class="panel">
+    <div class="mono" style="margin-bottom:6px">Columns</div>
+    <div class="cols" id="colToggles"></div>
+    <div class="toolbar mono" id="status"></div>
+  </div>
+
+  <div class="mono" id="counts">Loading…</div>
+  <div class="table-wrap">
+    <table id="grid">
+      <thead><tr>
+        <th data-k="NES Title">NES Title</th>
+        <th data-k="Famicom Title">Famicom Title</th>
+        <th data-k="Developer">Developer</th>
+        <th data-k="Publisher NA">Publisher (NA)</th>
+        <th data-k="Publisher JP">Publisher (JP)</th>
+        <th data-k="Famicom Cart Code (HVC)">HVC</th>
+        <th data-k="Famicom Disk Code (FMC/FDS)">FMC/FDS</th>
+        <th data-k="NA Mapper">NA Mapper</th>
+        <th data-k="JP Mapper">JP Mapper</th>
+        <th data-k="Localization Type">Localization</th>
+        <th data-k="Variant Type">Variant Type</th>
+        <th data-k="FamicomBox Presence">FamicomBox</th>
+        <th data-k="FamicomBox Gray Cart">Gray Cart</th>
+        <th data-k="Confidence">Confidence</th>
+        <th data-k="Notes">Notes</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p class="mono">CSV: <a id="csvlink" target="_blank" rel="noreferrer"></a></p>
+</div>
+
+<footer class="mono">GitHub Pages ready. Light/dark + column visibility + CSV download.</footer>
 
 <script>
 (function(){
-  const CSV_PATH = "data/nes_na_high_locked_v2.csv";
+  const params = new URLSearchParams(location.search);
+  const csv = params.get("csv") || "nes_famicom_cross_region_verified_TIGHT_A_to_Z_PLUS_VARIANTS.csv";
+  const csvPath = "data/" + csv;
+  const buildStamp = "20250813_010352 UTC";
+  document.getElementById("build").textContent = "Build: " + buildStamp;
+  const link = document.getElementById("csvlink"); link.textContent = csvPath; link.href = csvPath;
+
+  // THEME
+  const THEME_KEY = "nfc_theme";
+  function applyTheme(t){ document.documentElement.classList.toggle('light', t==='light'); }
+  let theme = localStorage.getItem(THEME_KEY) || (matchMedia('(prefers-color-scheme: light)').matches ? 'light':'dark');
+  applyTheme(theme);
+  document.getElementById("theme").addEventListener("click", () => {
+    theme = (theme==='light' ? 'dark' : 'light');
+    localStorage.setItem(THEME_KEY, theme);
+    applyTheme(theme);
+  });
+
+  // TABLE + FILTERS
   const grid = document.querySelector("#grid tbody");
-  const q = document.querySelector("#q");
-  const selConf = document.querySelector("#confidence");
-  const selPub = document.querySelector("#publisher");
-  const shown = document.querySelector("#shown");
-  const total = document.querySelector("#total");
+  const q = document.getElementById("q");
+  const selC = document.getElementById("confidence");
+  const selPNA = document.getElementById("pubna");
+  const selPJP = document.getElementById("pubjp");
+  const selFB = document.getElementById("fb");
+  const counts = document.getElementById("counts");
+  const status = document.getElementById("status");
+  let rows = [], filtered = [], sortKey = "NES Title", sortDir = 1;
 
-  let rows = [];
-  let sortKey = "NES Title";
-  let sortDir = 1;
-
-  function badge(v){
-    if(!v) return "";
-    const c = v.toLowerCase();
-    const klass = c==="high" ? "high" : (c==="medium" ? "medium" : "");
-    return `<span class="badge ${klass}">${v}</span>`;
-  }
-
-  function render(){
-    const term = q.value.trim().toLowerCase();
-    const conf = selConf.value;
-    const pub = selPub.value;
-    let filtered = rows.filter(r=>{
+  function hyd(sel,set){ sel.innerHTML = '<option value="">'+sel.options[0].text+'</option>' + Array.from(set).sort().map(x=>`<option>${x}</option>`).join(""); }
+  function doFilter(){
+    const term=(q.value||'').trim().toLowerCase(), conf=selC.value, pna=selPNA.value, pjp=selPJP.value, fb=selFB.value;
+    filtered = rows.filter(r=>{
       const hay = (r["NES Title"]+" "+r["Famicom Title"]+" "+(r["Developer"]||"")+" "+(r["Publisher NA"]||"")+" "+(r["Publisher JP"]||"")+" "+(r["Notes"]||"")).toLowerCase();
       if(term && !hay.includes(term)) return false;
       if(conf && (r["Confidence"]||"")!==conf) return false;
-      if(pub && ((r["Publisher NA"]||"")!==pub && (r["Publisher JP"]||"")!==pub)) return false;
+      if(pna && (r["Publisher NA"]||"")!==pna) return false;
+      if(pjp && (r["Publisher JP"]||"")!==pjp) return false;
+      if(fb && (r["FamicomBox Presence"]||"")!==fb) return false;
       return true;
     });
-    filtered.sort((a,b)=>{
-      let av = (a[sortKey]||"").toString().toLowerCase();
-      let bv = (b[sortKey]||"").toString().toLowerCase();
-      if(av<bv) return -1*sortDir;
-      if(av>bv) return  1*sortDir;
-      return 0;
-    });
-
-    grid.innerHTML = filtered.map(r=>`
-      <tr>
-        <td>${r["NES Title"]||""}</td>
-        <td>${r["Famicom Title"]||""}</td>
-        <td>${r["Developer"]||""}</td>
-        <td>${r["Publisher NA"]||""}</td>
-        <td>${r["Publisher JP"]||""}</td>
-        <td><small class="mono">${r["Famicom Cart Code (HVC)"]||""}</small></td>
-        <td><small class="mono">${r["Famicom Disk Code (FMC/FDS)"]||""}</small></td>
-        <td>${r["NA Mapper"]||""}</td>
-        <td>${r["JP Mapper"]||""}</td>
-        <td>${r["NA PRG Size KB"]||""}</td>
-        <td>${r["JP PRG Size KB"]||""}</td>
-        <td>${r["NA Save Method"]||""}</td>
-        <td>${r["JP Save Method"]||""}</td>
-        <td>${badge(r["Confidence"]||"")}</td>
-        <td>${r["Notes"]||""}</td>
-      </tr>
-    `).join("");
-
-    shown.textContent = filtered.length;
-    total.textContent = rows.length;
+    filtered.sort((a,b)=>{let av=(a[sortKey]||"").toString().toLowerCase(), bv=(b[sortKey]||"").toString().toLowerCase(); if(av<bv) return -1*sortDir; if(av>bv) return 1*sortDir; return 0;});
   }
-
-  function hydratePublishers(){
-    const pubs = new Set();
-    rows.forEach(r=>{ if(r["Publisher NA"]) pubs.add(r["Publisher NA"]); if(r["Publisher JP"]) pubs.add(r["Publisher JP"]); });
-    selPub.innerHTML = `<option value="">All publishers</option>` + Array.from(pubs).sort().map(p=>`<option>${p}</option>`).join("");
+  function render(){
+    doFilter();
+    grid.innerHTML = filtered.map(r=>`<tr>
+      <td>${r["NES Title"]||""}</td>
+      <td>${r["Famicom Title"]||""}</td>
+      <td>${r["Developer"]||""}</td>
+      <td>${r["Publisher NA"]||""}</td>
+      <td>${r["Publisher JP"]||""}</td>
+      <td><small class="mono">${r["Famicom Cart Code (HVC)"]||""}</small></td>
+      <td><small class="mono">${r["Famicom Disk Code (FMC/FDS)"]||""}</small></td>
+      <td>${r["NA Mapper"]||""}</td>
+      <td>${r["JP Mapper"]||""}</td>
+      <td>${r["Localization Type"]||""}</td>
+      <td>${r["Variant Type"]||""}</td>
+      <td>${r["FamicomBox Presence"]||""}</td>
+      <td>${r["FamicomBox Gray Cart"]||""}</td>
+      <td>${r["Confidence"]||""}</td>
+      <td>${r["Notes"]||""}</td>
+    </tr>`).join("");
+    counts.textContent = filtered.length + " shown from " + rows.length + " rows";
+    applyColumnVisibility(); // reapply after rerender
+    status.textContent = "Filtered rows: " + filtered.length + " | Sort: " + sortKey + (sortDir>0?" ↑":" ↓");
   }
-
   function bindSort(){
     document.querySelectorAll("th").forEach(th=>{
-      th.addEventListener("click",()=>{
+      th.addEventListener("click", ()=>{
         const k = th.getAttribute("data-k");
-        if(sortKey===k) sortDir *= -1; else { sortKey=k; sortDir=1; }
+        if(sortKey===k) sortDir*=-1; else { sortKey=k; sortDir=1; }
         render();
       });
     });
   }
 
-  Papa.parse(CSV_PATH, {
-    download:true, header:true, skipEmptyLines:true,
+  // COLUMN TOGGLES
+  const COL_KEY = "nfc_columns_v1";
+  const ths = Array.from(document.querySelectorAll("thead th"));
+  const keys = ths.map(th => th.getAttribute("data-k"));
+  const colPanel = document.getElementById("colToggles");
+  let vis = JSON.parse(localStorage.getItem(COL_KEY) || "null");
+  if(!vis) { vis = Object.fromEntries(keys.map(k=>[k,true])); } // default all on
+
+  function rebuildToggles(){
+    colPanel.innerHTML = keys.map(k => {
+      const id = "col_" + k.replace(/[^a-z0-9]+/gi,'_');
+      return `<label><input type="checkbox" id="${id}" data-k="${k}" ${vis[k]?'checked':''}/> ${k}</label>`;
+    }).join("");
+    colPanel.querySelectorAll("input[type=checkbox]").forEach(ch => {
+      ch.addEventListener("change", e => {
+        vis[e.target.dataset.k] = e.target.checked;
+        localStorage.setItem(COL_KEY, JSON.stringify(vis));
+        applyColumnVisibility();
+      });
+    });
+  }
+
+  function applyColumnVisibility(){
+    const ths = Array.from(document.querySelectorAll("thead th"));
+    const rowsTr = Array.from(document.querySelectorAll("#grid tbody tr"));
+    ths.forEach((th, idx) => {
+      const k = th.getAttribute("data-k");
+      const on = !!vis[k];
+      th.style.display = on ? "" : "none";
+      rowsTr.forEach(tr => {
+        const td = tr.children[idx];
+        if(td) td.style.display = on ? "" : "none";
+      });
+    });
+  }
+
+  // DOWNLOAD FILTERED
+  function downloadFiltered(){
+    if(!filtered.length){ alert("No rows to download."); return; }
+    const csvText = Papa.unparse(filtered, { quotes: true });
+    const blob = new Blob([csvText], {type:"text/csv;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = (new URLSearchParams(location.search).get("csv") || "nes_famicom_cross_region_verified_TIGHT_A_to_Z_PLUS_VARIANTS.csv").replace(/\.csv$/,'') + ".filtered.csv";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  document.getElementById("dl").addEventListener("click", downloadFiltered);
+
+  Papa.parse(csvPath, {
+    download: true, header: true, skipEmptyLines: true,
     complete: (res)=>{
       rows = res.data;
-      hydratePublishers();
+      const setPNA=new Set(), setPJP=new Set();
+      rows.forEach(r=>{ if(r["Publisher NA"]) setPNA.add(r["Publisher NA"]); if(r["Publisher JP"]) setPJP.add(r["Publisher JP"]); });
+      hyd(selPNA,setPNA); hyd(selPJP,setPJP);
       bindSort();
+      rebuildToggles();
       render();
-      document.querySelector("#q").addEventListener("input", render);
-      document.querySelector("#confidence").addEventListener("change", render);
-      document.querySelector("#publisher").addEventListener("change", render);
-    }
+    },
+    error: (err)=>{ console.error(err); counts.textContent = "Failed to load CSV: " + err; }
   });
+
+  [q, selC, selPNA, selPJP, selFB].forEach(el=>el.addEventListener("input", render));
 })();
 </script>
 </body>

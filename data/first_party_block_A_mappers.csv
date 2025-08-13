@@ -1,0 +1,8 @@
+﻿NES Title (US),Famicom Title (JP),Developer,US Catalog ID,JP Cart/Disk Code,JP Platform,JP Mapper,NA Mapper,Save (NA),Save (JP),Notes,Confidence
+Super Mario Bros.,スーパーマリオブラザーズ,Nintendo R&D4,NES-SM-USA,HVC-SM,Cart,0 (NROM-256),0 (NROM-256),None,None,Original Famicom/NES launch-era platformer.,High
+Super Mario Bros. 3,スーパーマリオブラザーズ3,Nintendo EAD,NES-UM-USA,HVC-UM,Cart,4 (MMC3/TSROM),4 (MMC3/TSROM),None,None,Uses MMC3; JP catalog code HVC-UM.,High
+The Legend of Zelda,ゼルダの伝説 (THE HYRULE FANTASY),Nintendo R&D4 (EAD),NES-ZL-USA,FMC-ZEL (FDS); later HVC-ZL (1994 cart),"Disk (1986), later Cart (1994)",FDS disk (no cart mapper); 1994 cart: 1 (MMC1/SNROM),1 (MMC1/SNROM),Battery-backed SRAM,Disk save (FDS) / Battery (1994 cart),JP first on FDS; later Famicom cart HVC-ZL in 1994.,High
+Zelda II: The Adventure of Link,リンクの冒険,Nintendo EAD,NES-AL-USA,FMC-LNK,Disk,FDS disk (no cart mapper),1 (MMC1/SNROM),Battery-backed SRAM,Disk save (FDS),Action-RPG sequel; JP released on FDS in 1987.,High
+Metroid,メトロイド,Nintendo R&D1,NES-MT-USA,FMC-MET (FDS),Disk,FDS disk (no cart mapper),1 (MMC1/SNROM),Password (no battery),Disk save (FDS),JP adds FDS extra audio; NES conversion uses MMC1 with passwords.,High
+Kid Icarus,光神話 パルテナの鏡,Nintendo R&D1 (with TOSE support),NES-KI-USA,FMC-PTM,Disk,FDS disk (no cart mapper),1 (MMC1/SNROM),Password (no battery),Disk save (FDS),JP FDS version features save; NES uses passwords.,High
+Excitebike,エキサイトバイク,Nintendo EAD,NES-EB-USA,HVC-EB,Cart,0 (NROM-128),0 (NROM-128),None,Data Recorder (via Famicom Keyboard) for track data,JP supports external Data Recorder for saving track editor data.,High
